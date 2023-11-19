@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "349373121430",
+    "project_id": "remendary-73ac6",
+    "storage_bucket": "remendary-73ac6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349373121430:android:d86d83ebb33781172cd3b7",
+        "android_client_info": {
+          "package_name": "com.example.remendary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "349373121430-ic17pa61nd8f7ercjk9cfupl7k1766tt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.remendary",
+            "certificate_hash": "926b1d8e7b140e0fda2ac4168f8d3e9906ccd4f7"
+          }
+        },
+        {
+          "client_id": "349373121430-ceilru6c06ld4s9tlciulnpuhd8ss6ub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgn7TfXEkLPmzGfD6BvG8ip-bxvVyk1WM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "349373121430-ceilru6c06ld4s9tlciulnpuhd8ss6ub.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
