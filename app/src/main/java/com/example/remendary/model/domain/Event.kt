@@ -1,5 +1,5 @@
 package com.example.remendary.model.domain
 
-import com.google.type.DateTime
+import java.time.LocalDateTime
 
-data class Event(val dateTime: DateTime, val name: String, val description: String = "")
+data class Event(val dateTime: LocalDateTime, val name: String, val description: String = "")

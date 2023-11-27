@@ -1,73 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Fragment_task"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".usecases.home.task.TasksFragment">
 
-
-
-
-    <LinearLayout
-        android:id="@+id/highPrioritylyt"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tareastv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/mediumPrioritylyt"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="50dp"
+        android:text="Tareas"
+        app:layout_constraintEnd_toStartOf="@+id/newTaskbtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-        <TextView
-            android:id="@+id/highPrioritytxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ALTA" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ListView
-            android:id="@+id/highPriorityLV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/mediumPrioritylyt"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/newTaskbtn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/lowPrioritylyt"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="7dp"
+        android:text="Nueva Tarea"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/highPrioritylyt">
-        <TextView
-            android:id="@+id/mediumPrioritytxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MEDIA"/>
-        <ListView
-            android:id="@+id/mediumPriorityLV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        app:layout_constraintStart_toEndOf="@+id/tareastv"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/lowPrioritylyt"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasksrv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/mediumPrioritylyt"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <TextView
-            android:id="@+id/lowPrioritytxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BAJA"/>
+        app:layout_constraintTop_toBottomOf="@+id/newTaskbtn"
+        tools:listitem="@layout/task_list_item" />
 
-        <ListView
-            android:id="@+id/lowPriorityLV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

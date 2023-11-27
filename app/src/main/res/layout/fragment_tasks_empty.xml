@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".usecases.home.task.TasksFragment">
+
+    <TextView
+        android:id="@+id/taskstv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tareas"
+        app:layout_constraintBottom_toTopOf="@+id/emptyTaskstv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/emptyTaskstv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="75dp"
+        android:textAlignment="center"
+        android:text="No tienes tareas pendientes.\n Pulsa el botón para crear una nueva"
+        android:lines="2"
+        app:layout_constraintBottom_toTopOf="@+id/newTaskbtn"
+        app:layout_constraintEnd_toEndOf="@+id/taskstv"
+        app:layout_constraintStart_toStartOf="@+id/taskstv"
+        app:layout_constraintTop_toBottomOf="@+id/taskstv" />
+    <Button
+        android:id="@+id/newTaskbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nueva Tarea"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/taskstv"
+        app:layout_constraintStart_toStartOf="@+id/taskstv"
+        app:layout_constraintTop_toBottomOf="@+id/emptyTaskstv"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
