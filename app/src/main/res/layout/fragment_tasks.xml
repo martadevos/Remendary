@@ -4,40 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Fragment_task"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".usecases.home.task.TasksFragment">
 
     <TextView
         android:id="@+id/tareastv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="30dp"
         android:text="Tareas"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/newTaskbtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"/>
 
     <Button
         android:id="@+id/newTaskbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="7dp"
         android:text="Nueva Tarea"
+        app:layout_constraintBottom_toBottomOf="@+id/tareastv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tareastv"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/tareastv" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/emptyTaskstv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="75dp"
+        android:textAlignment="center"
+        android:text="No tienes tareas pendientes.\n Pulsa el botón para crear una nueva"
+        android:lines="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/newTaskbtn"
+        app:layout_constraintStart_toStartOf="@+id/tareastv"
+        app:layout_constraintTop_toBottomOf="@+id/newTaskbtn" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tasksrv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginHorizontal="20dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newTaskbtn"
+        app:layout_constraintVertical_bias="0"
         tools:listitem="@layout/task_list_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

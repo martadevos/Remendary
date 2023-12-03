@@ -1,17 +1,15 @@
 package com.example.remendary.usecases.home.task
 
-import android.content.ContentValues
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.ListView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,11 +18,8 @@ import com.example.remendary.R
 import com.example.remendary.model.domain.Task
 import com.example.remendary.model.domain.User
 import com.example.remendary.util.Utilities
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class TasksFragment : Fragment() {
@@ -33,8 +28,7 @@ class TasksFragment : Fragment() {
     private lateinit var currentUser: User
     private lateinit var rvTasks: RecyclerView
     private lateinit var newTaskBtn: Button
-    private var tasksList: ArrayList<Task>? = null
-    private var lyt: Int = R.layout.fragment_tasks
+    private lateinit var emptyTasksTv: TextView
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +37,6 @@ class TasksFragment : Fragment() {
         runBlocking {
             currentUser = Utilities.getCurrentUserInfo()
         }
-        tasksList = currentUser.tasks
-        if (tasksList.isNullOrEmpty()) {
-            lyt = R.layout.fragment_tasks_empty
-        }
     }
 
     override fun onCreateView(
@@ -54,40 +44,50 @@ class TasksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(lyt, container, false)
+        return inflater.inflate(R.layout.fragment_tasks, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireView().tag = "taskFragment"
+        emptyTasksTv = requireView().findViewById(R.id.emptyTaskstv)
+        rvTasks = requireView().findViewById(R.id.tasksrv)
         newTaskBtn = requireView().findViewById(R.id.newTaskbtn)
         newTaskBtn.setOnClickListener { createNewTask() }
-        if (!tasksList.isNullOrEmpty()) {
+        changeVisibilities()
+    }
+
+    private fun changeVisibilities() {
+        if (!currentUser.tasks.isNullOrEmpty()) {
             initRecyclerView()
+            emptyTasksTv.visibility = GONE
+            rvTasks.visibility = VISIBLE
+        }
+        else{
+            emptyTasksTv.visibility = VISIBLE
+            rvTasks.visibility = GONE
         }
     }
 
 
     private fun initRecyclerView() {
-        rvTasks = requireView().findViewById(R.id.tasksrv)
         rvTasks.layoutManager = LinearLayoutManager(requireContext())
         rvTasks.isClickable = true
-        rvTasks.adapter = TaskAdapter(tasksList!!)
-        /*val taskItems = lvTasks.findViewById<ListView>(R.id.taskItem)
-        var checkbox = taskItems.findViewById<CheckBox>(R.id.chkbxDone)
-            .setOnCheckedChangeListener { checkbox, checked -> updateTask(checkbox, checked) }*/
-    }
 
-    private fun updateTask(checkbox: CompoundButton, checked: Boolean) {
-        /*checkbox.
-        var task: Task =
-        db.collection("users").document(currentUser.username).collection("tasks").document(task.name)*/
-
+        val taskAdapter = TaskAdapter(currentUser.tasks!!, currentUser.username)
+        rvTasks.adapter = taskAdapter
+        taskAdapter.setOnClickListener(object :
+            TaskAdapter.OnClickListener {
+            override fun onClick(position: Int, model: Task) {
+                rvTasks.isClickable = false
+                val dialog = CreateEditTaskFragment(2, currentUser.tasks!![position])
+                dialog.show(parentFragmentManager, "createTaskDialog")
+            }
+        })
     }
 
     private fun createNewTask() {
-        val dialog = CreateEditTaskFragment()
+        val dialog = CreateEditTaskFragment(1, null)
         dialog.show(parentFragmentManager, "createTaskDialog")
 
     }
-
 }

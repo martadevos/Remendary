@@ -1,95 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".usecases.home.task.CreateEditTaskFragment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="50dp"
     app:chainUseRtl="true"
+    tools:context=".usecases.home.task.CreateEditTaskFragment"
     tools:ignore="Autofill">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/createEditTaskCLyt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Introduce el nombre de la tarea"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/etTaskName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="50dp"
+        android:background="#00000000">
 
-    <EditText
-        android:id="@+id/etTaskName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:hint="Título"
-        android:inputType="text"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@id/etTaskDescription"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Introduce el nombre de la tarea"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/etTaskName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etTaskDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Descripción"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@id/spinnerPriority"
-        app:layout_constraintEnd_toEndOf="@+id/etTaskName"
-        app:layout_constraintStart_toStartOf="@+id/etTaskName"
-        app:layout_constraintTop_toBottomOf="@+id/etTaskName"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine" />
+        <EditText
+            android:id="@+id/etTaskName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:hint="Título"
+            android:inputType="text"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@id/etTaskDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-    <Spinner
-        android:id="@+id/spinnerPriority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:layout_constraintBottom_toTopOf="@id/btnCreateTask"
-        app:layout_constraintEnd_toEndOf="@id/etTaskDescription"
-        app:layout_constraintStart_toEndOf="@id/chkbxDone"
-        app:layout_constraintTop_toBottomOf="@id/etTaskDescription" />
+        <EditText
+            android:id="@+id/etTaskDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Descripción"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@id/spinnerPriority"
+            app:layout_constraintEnd_toEndOf="@+id/etTaskName"
+            app:layout_constraintStart_toStartOf="@+id/etTaskName"
+            app:layout_constraintTop_toBottomOf="@+id/etTaskName"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-    <CheckBox
-        android:id="@+id/chkbxDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hecho"
-        app:layout_constraintBottom_toBottomOf="@+id/spinnerPriority"
-        app:layout_constraintEnd_toStartOf="@id/spinnerPriority"
-        app:layout_constraintStart_toStartOf="@id/etTaskDescription"
-        app:layout_constraintTop_toTopOf="@id/spinnerPriority" />
+        <Spinner
+            android:id="@+id/spinnerPriority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:layout_constraintBottom_toTopOf="@id/btnCreateTask"
+            app:layout_constraintEnd_toEndOf="@id/etTaskDescription"
+            app:layout_constraintStart_toEndOf="@id/chkbxDone"
+            app:layout_constraintTop_toBottomOf="@id/etTaskDescription" />
 
-    <Button
-        android:id="@+id/btnCreateTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:text="Guardar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnBack"
-        app:layout_constraintStart_toStartOf="@id/chkbxDone"
-        app:layout_constraintTop_toBottomOf="@id/spinnerPriority" />
+        <CheckBox
+            android:id="@+id/chkbxDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hecho"
+            app:layout_constraintBottom_toBottomOf="@+id/spinnerPriority"
+            app:layout_constraintEnd_toStartOf="@id/spinnerPriority"
+            app:layout_constraintStart_toStartOf="@id/etTaskDescription"
+            app:layout_constraintTop_toTopOf="@id/spinnerPriority" />
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:text="Atrás"
-        app:layout_constraintBottom_toBottomOf="@id/btnCreateTask"
-        app:layout_constraintEnd_toEndOf="@id/spinnerPriority"
-        app:layout_constraintStart_toEndOf="@id/btnCreateTask"
-        app:layout_constraintTop_toTopOf="@id/btnCreateTask" />
+        <Button
+            android:id="@+id/btnCreateTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guardar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnBack"
+            app:layout_constraintStart_toStartOf="@id/chkbxDone"
+            app:layout_constraintTop_toBottomOf="@id/spinnerPriority"
+            app:layout_constraintVertical_bias="1" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atrás"
+            app:layout_constraintBottom_toBottomOf="@id/btnCreateTask"
+            app:layout_constraintEnd_toEndOf="@id/spinnerPriority"
+            app:layout_constraintStart_toEndOf="@id/btnCreateTask"
+            app:layout_constraintTop_toTopOf="@id/btnCreateTask" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

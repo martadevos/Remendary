@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import java.time.LocalDateTime
 
 
@@ -33,49 +34,62 @@ object Utilities {
                 }
             }
         }
-        val userDoc: DocumentReference = db.collection("users").document(username)
+        //val userDoc: DocumentReference = db.collection("users").document(username)
 
         //Create and fill list of tasks
-        val tasks: ArrayList<Task> = arrayListOf()
-        userDoc.collection("tasks").get().await().forEach { document ->
-            val priority: Task.PriorityValues = when (document["priority"].toString().trim()) {
-                "HIGH" -> Task.PriorityValues.HIGH
-                "MEDIUM" -> Task.PriorityValues.MEDIUM
-                else -> Task.PriorityValues.LOW
-            }
-            tasks.add(
-                Task(
-                    document["name"].toString().trim(),
-                    document["description"].toString().trim(),
-                    document["done"] as Boolean,
-                    priority
+
+        var tasks: ArrayList<Task>? = arrayListOf()
+        try {
+            db.collection("users").document(username).collection("tasks").get().await().forEach { document ->
+                val priority: Task.PriorityValues = when (document["priority"].toString().trim()) {
+                    "HIGH" -> Task.PriorityValues.HIGH
+                    "MEDIUM" -> Task.PriorityValues.MEDIUM
+                    else -> Task.PriorityValues.LOW
+                }
+                tasks!!.add(
+                    Task(
+                        document["name"].toString().trim(),
+                        document["description"].toString().trim(),
+                        document["done"] as Boolean,
+                        priority
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            tasks = null
         }
 
         //Create and fill list of events
-        val events: ArrayList<Event> = arrayListOf()
-        userDoc.collection("events").get().await().forEach { document ->
-            events.add(
-                Event(
-                    LocalDateTime.parse(
-                        document["dateTime"].toString()
-                    ),
-                    document["name"].toString().trim(),
-                    document["description"].toString().trim()
+        var events: ArrayList<Event>? = arrayListOf()
+        try {
+            db.collection("users").document(username).collection("events").get().await().forEach { document ->
+                events!!.add(
+                    Event(
+                        LocalDateTime.parse(
+                            document["dateTime"].toString()
+                        ),
+                        document["name"].toString().trim(),
+                        document["description"].toString().trim()
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            events = null
         }
 
         //Create and fill list of routine elements
-        val routine: ArrayList<RoutineElement> = arrayListOf()
-        userDoc.collection("routine").get().await().forEach { document ->
-            routine.add(
-                RoutineElement(
-                    document["name"].toString().trim(),
-                    document["done"] as Boolean
+        var routine: ArrayList<RoutineElement>? = arrayListOf()
+        try {
+            db.collection("users").document(username).collection("routine").get().await().forEach { document ->
+                routine!!.add(
+                    RoutineElement(
+                        document["name"].toString().trim(),
+                        document["done"] as Boolean
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            routine = null
         }
 
         //Create and return user
