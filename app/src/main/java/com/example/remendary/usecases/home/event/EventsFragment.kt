@@ -63,9 +63,9 @@ class EventsFragment : Fragment() {
         val addReminderBtn = view.findViewById<Button>(R.id.addReminderBtn)
         val eventsLsvw = view.findViewById<ListView>(R.id.eventsLsvw)
         val noEventsTxtvw = view.findViewById<TextView>(R.id.noEventsTxtvw)
-        var eventsOnDateSelected:List<Event>? = emptyList()
-        if(!currentUser.events.isNullOrEmpty() && currentUser.events?.first() != null && !currentUser.events?.first()!!.dateTime.isNullOrEmpty()) {
-           eventsOnDateSelected = compareDates()
+        var eventsOnDateSelected: List<Event>? = emptyList()
+        if (!currentUser.events.isNullOrEmpty() && currentUser.events?.first() != null && !currentUser.events?.first()!!.dateTime.isNullOrEmpty()) {
+            eventsOnDateSelected = compareDates()
             if (!eventsOnDateSelected.isNullOrEmpty()) {
                 noEventsTxtvw.visibility = View.INVISIBLE
                 eventsLsvw.adapter = EventsAdapter(
@@ -79,11 +79,11 @@ class EventsFragment : Fragment() {
             } else {
                 showNoEvents(eventsLsvw, noEventsTxtvw)
             }
-        }else{
+        } else {
             showNoEvents(eventsLsvw, noEventsTxtvw)
         }
         addReminderBtn.setOnClickListener {
-                showAddEventDialog(eventsLsvw, ArrayList(eventsOnDateSelected),noEventsTxtvw)
+            showAddEventDialog(eventsLsvw, ArrayList(eventsOnDateSelected), noEventsTxtvw)
         }
         MaterialAlertDialogBuilder(requireContext())
             .setView(view).show()
@@ -91,13 +91,17 @@ class EventsFragment : Fragment() {
 
     }
 
-    fun showNoEvents(eventsLsvw:ListView, noEventsTxtvw:TextView) {
+    fun showNoEvents(eventsLsvw: ListView, noEventsTxtvw: TextView) {
         eventsLsvw.visibility = View.INVISIBLE
         noEventsTxtvw.visibility = View.VISIBLE
     }
 
 
-    fun showAddEventDialog(eventsLsvw: ListView,eventsOnDateSelected:ArrayList<Event>,noEventsTxtvw: TextView) {
+    fun showAddEventDialog(
+        eventsLsvw: ListView,
+        eventsOnDateSelected: ArrayList<Event>,
+        noEventsTxtvw: TextView
+    ) {
         runBlocking {
             currentUser = Utilities.getCurrentUserInfo()
         }
@@ -108,7 +112,7 @@ class EventsFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext()).setCancelable(true)
             .setView(view).show()
         addBtn.setOnClickListener {
-            if(!eventName.text.toString().isNullOrEmpty()) {
+            if (!eventName.text.toString().isNullOrEmpty()) {
                 //Guardar nuevo evento
                 val eventDB = hashMapOf(
                     "name" to eventName.text.toString(),
@@ -119,7 +123,8 @@ class EventsFragment : Fragment() {
                 db.collection("users").document(currentUser.username).collection("events")
                     .document(eventName.text.toString()).set(eventDB)
                     .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Added Correctly", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Added Correctly", Toast.LENGTH_SHORT)
+                            .show()
                         runBlocking {
                             currentUser = Utilities.getCurrentUserInfo()
                         }
@@ -129,11 +134,15 @@ class EventsFragment : Fragment() {
                             currentUser,
                             db,
                             calendar,
-                        noEventsTxtvw)
-                        noEventsTxtvw.visibility=View.INVISIBLE
-                        eventsLsvw.visibility=View.VISIBLE
-                        setAlarm(calendar.plus(
-                            eventHour.hour.toString().plus(eventHour.minute.toString())))
+                            noEventsTxtvw
+                        )
+                        noEventsTxtvw.visibility = View.INVISIBLE
+                        eventsLsvw.visibility = View.VISIBLE
+                        setAlarm(
+                            calendar.plus(
+                                eventHour.hour.toString().plus(eventHour.minute.toString())
+                            )
+                        )
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(
@@ -145,7 +154,7 @@ class EventsFragment : Fragment() {
                     }
 
                 dialog.dismiss()
-            }else{
+            } else {
                 Toast.makeText(
                     requireContext(),
                     "Name can't be empty",
@@ -216,7 +225,8 @@ class EventsFragment : Fragment() {
             cal.timeInMillis,
             alarmIntent*/
 
-}
+    }
+
     class OnAlarmReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             Log.i("ALARM", "Alarm activated! " + System.currentTimeMillis())
@@ -226,8 +236,7 @@ class EventsFragment : Fragment() {
     }
 
 
-
-@RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O)
     private class EventsAdapter(
         private val context: Context,
         private var arrayList: java.util.ArrayList<Event>,
@@ -272,13 +281,14 @@ class EventsFragment : Fragment() {
                             ) && event.dateTime.substring(4, 8) == calendar.substring(4, 8)
                         }?.let { ArrayList(it) }!!
                         notifyDataSetChanged()
-                        if(arrayList.isEmpty()){
-                            noEventsTxtvw.visibility=View.VISIBLE
-                            convertView.visibility=View.INVISIBLE
+                        if (arrayList.isEmpty()) {
+                            noEventsTxtvw.visibility = View.VISIBLE
+                            convertView.visibility = View.INVISIBLE
                         }
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(context, "Oops Something went wrong :(", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Oops Something went wrong :(", Toast.LENGTH_SHORT)
+                            .show()
 
                     }
             }
@@ -287,3 +297,4 @@ class EventsFragment : Fragment() {
         }
 
     }
+}

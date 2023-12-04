@@ -1,11 +1,19 @@
 package com.example.remendary.usecases.home.routine
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.remendary.R
+import com.example.remendary.model.domain.User
+import com.example.remendary.util.Utilities
+import kotlinx.coroutines.runBlocking
 
 /**
  * A simple [Fragment] subclass.
@@ -13,12 +21,18 @@ import com.example.remendary.R
  * create an instance of this fragment.
  */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var currentUser: User
+    private lateinit var rvTasks: RecyclerView
+    private lateinit var newTaskBtn: Button
+    private lateinit var emptyTasksTv: TextView
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        runBlocking {
+            currentUser = Utilities.getCurrentUserInfo()
+        }
     }
 
     override fun onCreateView(
