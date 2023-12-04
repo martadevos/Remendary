@@ -19,13 +19,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:text="Name:">
         </TextView>
         <EditText
+            android:layout_marginLeft="10dp"
             android:id="@+id/eventNameEd"
-            android:layout_width="wrap_content"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
-
+            android:maxLength="20"
             ></EditText>
 
     </LinearLayout>

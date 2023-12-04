@@ -65,11 +65,8 @@ object Utilities {
             db.collection("users").document(username).collection("events").get().await().forEach { document ->
                 events!!.add(
                     Event(
-                        LocalDateTime.parse(
-                            document["dateTime"].toString()
-                        ),
-                        document["name"].toString().trim(),
-                        document["description"].toString().trim()
+                        document["dateTime"].toString().trim(),
+                        document["name"].toString().trim()
                     )
                 )
             }

@@ -1,8 +1,8 @@
-package com.example.remendary.usecases.home.event
+package com.example.remendary
 
-import android.content.ContentValues
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.opengl.Visibility
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.example.remendary.R
 import com.example.remendary.model.domain.Event
 import com.example.remendary.model.domain.User
 import com.example.remendary.util.Utilities
@@ -21,12 +19,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.type.DateTime
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 import java.util.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -38,7 +34,7 @@ class EventsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var calendar: LocalDateTime
+    lateinit var calendar: String
     private val db = Firebase.firestore
     private lateinit var currentUser: User
 
@@ -60,20 +56,34 @@ class EventsFragment : Fragment() {
 
 
     fun showEventDialog() {
+        runBlocking {
+            currentUser = Utilities.getCurrentUserInfo()
+        }
         val view = layoutInflater.inflate(R.layout.dialog_events_lyt, null)
         val addReminderBtn = view.findViewById<Button>(R.id.addReminderBtn)
         val eventsLsvw = view.findViewById<ListView>(R.id.eventsLsvw)
-        val noEventsTxtvw=view.findViewById<TextView>(R.id.noEventsTxtvw)
-        val eventsOnDateSelected=compareDates()
-        if(!eventsOnDateSelected.isNullOrEmpty()){
-            noEventsTxtvw.visibility=View.INVISIBLE
-            eventsLsvw.adapter = EventsAdapter(requireContext(),ArrayList(eventsOnDateSelected),currentUser,db,calendar)
+        val noEventsTxtvw = view.findViewById<TextView>(R.id.noEventsTxtvw)
+        var eventsOnDateSelected:List<Event>? = emptyList()
+        if(!currentUser.events.isNullOrEmpty() && currentUser.events?.first() != null && !currentUser.events?.first()!!.dateTime.isNullOrEmpty()) {
+           eventsOnDateSelected = compareDates()
+            if (!eventsOnDateSelected.isNullOrEmpty()) {
+                noEventsTxtvw.visibility = View.INVISIBLE
+                eventsLsvw.adapter = EventsAdapter(
+                    requireContext(),
+                    ArrayList(eventsOnDateSelected),
+                    currentUser,
+                    db,
+                    calendar,
+                    noEventsTxtvw
+                )
+            } else {
+                showNoEvents(eventsLsvw, noEventsTxtvw)
+            }
         }else{
-            eventsLsvw.visibility=View.INVISIBLE
-            noEventsTxtvw.visibility=View.VISIBLE
+            showNoEvents(eventsLsvw, noEventsTxtvw)
         }
         addReminderBtn.setOnClickListener {
-            showAddEventDialog()
+                showAddEventDialog(eventsLsvw, ArrayList(eventsOnDateSelected),noEventsTxtvw)
         }
         MaterialAlertDialogBuilder(requireContext())
             .setView(view).show()
@@ -81,37 +91,68 @@ class EventsFragment : Fragment() {
 
     }
 
-    fun showAddEventDialog(){
-        val view = layoutInflater.inflate(R.layout.add_event_layout, null)
-        val eventHour=view.findViewById<TimePicker>(R.id.eventHourTmpck)
-        val eventName=view.findViewById<EditText>(R.id.eventNameEd)
-        val addBtn=view.findViewById<Button>(R.id.addEventBtn)
+    fun showNoEvents(eventsLsvw:ListView, noEventsTxtvw:TextView) {
+        eventsLsvw.visibility = View.INVISIBLE
+        noEventsTxtvw.visibility = View.VISIBLE
+    }
 
-       val eventDB = hashMapOf(
-            "name" to eventName.text.toString(),
-            "description" to "",
-            "dateTime" to ""//HAY QUE VER EL TIPO QUE NOS VIENE DE FIREBASE
-        )
-        MaterialAlertDialogBuilder(requireContext())
-            .setView(view).show()
-        addBtn.setOnClickListener{
-            //Guardar nuevo evento
-            db.collection("users").document(currentUser.username).collection("events")
-                .document(eventName.text.toString()).set(eventDB)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Added Correctly", Toast.LENGTH_SHORT)
 
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), "Oops Something went wrong :(", Toast.LENGTH_SHORT)
-
-                }
+    fun showAddEventDialog(eventsLsvw: ListView,eventsOnDateSelected:ArrayList<Event>,noEventsTxtvw: TextView) {
+        runBlocking {
+            currentUser = Utilities.getCurrentUserInfo()
         }
+        val view = layoutInflater.inflate(R.layout.add_event_layout, null)
+        val eventHour = view.findViewById<TimePicker>(R.id.eventHourTmpck)
+        val eventName = view.findViewById<EditText>(R.id.eventNameEd)
+        val addBtn = view.findViewById<Button>(R.id.addEventBtn)
+        val dialog = MaterialAlertDialogBuilder(requireContext()).setCancelable(true)
+            .setView(view).show()
+        addBtn.setOnClickListener {
+            if(!eventName.text.toString().isNullOrEmpty()) {
+                //Guardar nuevo evento
+                val eventDB = hashMapOf(
+                    "name" to eventName.text.toString(),
+                    "dateTime" to calendar.plus(
+                        eventHour.hour.toString().plus(eventHour.minute.toString())
+                    )//HAY QUE VER EL TIPO QUE NOS VIENE DE FIREBASE ASÍ QUE NO PUEDO CONTINUAR :(
+                )
+                db.collection("users").document(currentUser.username).collection("events")
+                    .document(eventName.text.toString()).set(eventDB)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Added Correctly", Toast.LENGTH_SHORT).show()
+                        runBlocking {
+                            currentUser = Utilities.getCurrentUserInfo()
+                        }
+                        eventsLsvw.adapter = EventsAdapter(
+                            requireContext(),
+                            ArrayList(compareDates()),
+                            currentUser,
+                            db,
+                            calendar,
+                        noEventsTxtvw)
+                        noEventsTxtvw.visibility=View.INVISIBLE
+                        eventsLsvw.visibility=View.VISIBLE
+                        setAlarm(calendar.plus(
+                            eventHour.hour.toString().plus(eventHour.minute.toString())))
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            requireContext(),
+                            "Oops Something went wrong :(",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-            runBlocking {
-                currentUser = Utilities.getCurrentUserInfo()
+                    }
+
+                dialog.dismiss()
+            }else{
+                Toast.makeText(
+                    requireContext(),
+                    "Name can't be empty",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
+        }
     }
 
 
@@ -124,11 +165,7 @@ class EventsFragment : Fragment() {
             } else {
                 dayWellFormated = dayOfMonth.toString()
             }
-            calendar = LocalDate.parse(
-                dayWellFormated.plus(month).plus(year),
-                DateTimeFormatter.ofPattern("ddMMyyyy")
-            )
-                .atStartOfDay()
+            calendar = dayWellFormated.plus(month).plus(year)
             showEventDialog()
         }
     }
@@ -136,8 +173,9 @@ class EventsFragment : Fragment() {
 
     private fun compareDates(): List<Event>? {
         return currentUser.events?.filter { event ->
-            event.dateTime.dayOfMonth == calendar.dayOfMonth
-                    && event.dateTime.month == calendar.month && event.dateTime.year == calendar.year
+            event.dateTime.substring(0, 2) == calendar.substring(0, 2)
+                    && event.dateTime.substring(2, 4) == calendar.substring(2, 4)
+                    && event.dateTime.substring(4, 8) == calendar.substring(4, 8)
         }
     }
 
@@ -157,12 +195,46 @@ class EventsFragment : Fragment() {
             }
     }
 
+    private fun setAlarm(date: String) {
+        val cal = Calendar.getInstance()
+        var dateFormated = Date()
+        val sdf = SimpleDateFormat("ddMMyyyyHHmm", Locale.ENGLISH)
+        dateFormated = sdf.parse(date)
+        cal.time = dateFormated
+
+        /*
+        var alarmMgr: AlarmManager? = null
+
+        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        Intent(requireContext(), Alarm)
+        var alarmIntent: PendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(context, 0, intent, 0)
+        }
+
+        alarmMgr?.set(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            cal.timeInMillis,
+            alarmIntent*/
+
+}
+    class OnAlarmReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.i("ALARM", "Alarm activated! " + System.currentTimeMillis())
+
+            //Aquí llama tu notificación.
+        }
+    }
+
+
+
+@RequiresApi(Build.VERSION_CODES.O)
     private class EventsAdapter(
         private val context: Context,
         private var arrayList: java.util.ArrayList<Event>,
-        private var currentUser:User,
+        private var currentUser: User,
         private val db: FirebaseFirestore,
-        private val calendar: LocalDateTime
+        private val calendar: String,
+        private val noEventsTxtvw: TextView
     ) : BaseAdapter() {
 
         override fun getCount(): Int {
@@ -177,34 +249,41 @@ class EventsFragment : Fragment() {
             return p0.toLong()
         }
 
+
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             var convertView = convertView
             convertView = LayoutInflater.from(context).inflate(R.layout.events_row, parent, false)
             val eventTitle = convertView.findViewById<TextView>(R.id.eventTitle)
             eventTitle.text = arrayList[position].name
-            val deleteBtn = convertView.findViewById<Button>(R.id.deleteEventBtn)
+            val deleteBtn = convertView.findViewById<ImageButton>(R.id.deleteEventBtn)
             deleteBtn.setOnClickListener {
                 db.collection("users").document(currentUser.username).collection("events")
                     .document(eventTitle.text.toString()).delete()
                     .addOnSuccessListener {
-                        Toast.makeText(context, "Deleted Succesfully", Toast.LENGTH_SHORT)
-
+                        Toast.makeText(context, "Deleted Succesfully", Toast.LENGTH_SHORT).show()
+                        runBlocking {
+                            currentUser = Utilities.getCurrentUserInfo()
+                        }
+                        arrayList = currentUser.events?.filter { event ->
+                            event.dateTime.substring(0, 2) == calendar.substring(0, 2)
+                                    && event.dateTime.substring(2, 4) == calendar.substring(
+                                2,
+                                4
+                            ) && event.dateTime.substring(4, 8) == calendar.substring(4, 8)
+                        }?.let { ArrayList(it) }!!
+                        notifyDataSetChanged()
+                        if(arrayList.isEmpty()){
+                            noEventsTxtvw.visibility=View.VISIBLE
+                            convertView.visibility=View.INVISIBLE
+                        }
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(context, "Oops Something went wrong :(", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "Oops Something went wrong :(", Toast.LENGTH_SHORT).show()
 
                     }
             }
-            runBlocking {
-                currentUser = Utilities.getCurrentUserInfo()
-            }
-            arrayList= currentUser.events?.filter { event ->
-                event.dateTime.dayOfMonth == calendar.dayOfMonth
-                        && event.dateTime.month == calendar.month && event.dateTime.year == calendar.year
-            }?.let { ArrayList(it) }!!
-            notifyDataSetChanged()
+
             return convertView
         }
 
     }
-}
