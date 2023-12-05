@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="50dp"
+    app:cardCornerRadius="10dp"
     app:chainUseRtl="true"
     tools:context=".usecases.home.task.CreateEditTaskFragment"
     tools:ignore="Autofill">

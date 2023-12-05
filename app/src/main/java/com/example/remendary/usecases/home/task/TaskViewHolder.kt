@@ -27,7 +27,6 @@ class TaskViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val descriptionTxt: TextView = view.findViewById(R.id.taskItemDescriptionTxt)
         val doneChkBox: CheckBox = view.findViewById(R.id.taskItemDoneChkBox)
         val taskItemView: CardView = view.findViewById(R.id.taskItem)
-        val deleteTaskBtn: ImageButton = view.findViewById(R.id.deleteTaskBtn)
 
         nameTxt.text = task.name
         if (task.description.isEmpty()){
