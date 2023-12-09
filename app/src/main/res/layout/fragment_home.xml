@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".usecases.home.routine.HomeFragment">
+    tools:context=".usecases.home.routine.HomeFragment"
+    android:background="@color/isabelline">
 
     <LinearLayout
         android:id="@+id/progressLyt"
@@ -156,6 +157,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:src="@drawable/baseline_add_48"
+            android:backgroundTint="#93A9C8"
+            app:backgroundTint="#93A9C8"
             android:contentDescription="Add new item to your routine"
             android:layout_margin="16dp" />
     </LinearLayout>

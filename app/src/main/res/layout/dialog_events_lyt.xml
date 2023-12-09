@@ -2,21 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/noEventsTxtvw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No events today, Add one clicking below"
-        ></TextView>
+        android:text="No events today, Add one clicking below" />
 
     <ListView
         android:id="@+id/eventsLsvw"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"></ListView>
+        android:layout_margin="10dp"
+        android:dividerHeight="10sp"
+        android:divider="@android:color/transparent"
+        tools:listitem="@layout/events_row"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/addReminderBtn"
@@ -24,5 +29,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#4F63D1"
-        android:text="ADD EVENTS"></Button>
+        android:text="nuevo" />
 </LinearLayout>

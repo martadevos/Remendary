@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
             if (!name.text.toString().isNullOrEmpty()) {
                 //Guardar nuevo evento
                 val routineElement = hashMapOf(
-                    "name" to name.text.toString(),
+                    "name" to name.text.toString().trim(),
                     "done" to false
                 )
                 db.collection("users").document(currentUser.username).collection("routine")

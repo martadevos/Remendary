@@ -34,8 +34,6 @@ object Utilities {
                 }
             }
         }
-        //val userDoc: DocumentReference = db.collection("users").document(username)
-
         //Create and fill list of tasks
 
         var tasks: ArrayList<Task>? = arrayListOf()
@@ -88,9 +86,16 @@ object Utilities {
         } catch (e: Exception) {
             routine = null
         }
+        var user = User(username, useremail, 0)
+        db.collection("users").document(username).get().addOnSuccessListener{ document ->
+            user = User(document["username"] as String, document["email"] as String, (document["water"] as Long).toInt())
+        }.await()
 
-        //Create and return user
-        return User(username, useremail, tasks, events, routine)
+        user.tasks = tasks
+        user.events = events
+        user.routine = routine
+
+        return user
     }
 
 }

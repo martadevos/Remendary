@@ -157,6 +157,7 @@ class CreateAccountActivity : AppCompatActivity() {
             val userDb = hashMapOf(
                 "username" to username,
                 "email" to userEmail,
+                "water" to 0
             )
             db.collection("users").document(username).set(userDb).await()
 
