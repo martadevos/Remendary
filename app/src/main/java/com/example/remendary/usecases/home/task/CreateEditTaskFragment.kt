@@ -204,41 +204,29 @@ class CreateEditTaskFragment(val tipo: Int, val taskToEdit: Task?) : DialogFragm
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun editTask(): Boolean {
-        val exit: Boolean
-        if (etTaskName.text.toString().trim().isNotEmpty() && (etDescription.text.toString().trim()
-                .isNotEmpty() ||
-                    (etDescription.text.toString().trim()
-                        .isEmpty() && taskToEdit!!.description.isEmpty()))
-        ) {
-
-            val priority: Task.PriorityValues = when (spinnerPriority.selectedItem.toString()) {
-                "Baja" -> Task.PriorityValues.LOW
-                "Media" -> Task.PriorityValues.MEDIUM
-                "Alta" -> Task.PriorityValues.HIGH
-                else -> {
-                    Task.PriorityValues.LOW
-                }
+        val priority: Task.PriorityValues = when (spinnerPriority.selectedItem.toString()) {
+            "Baja" -> Task.PriorityValues.LOW
+            "Media" -> Task.PriorityValues.MEDIUM
+            "Alta" -> Task.PriorityValues.HIGH
+            else -> {
+                Task.PriorityValues.LOW
             }
-            taskToEdit!!.name = etTaskName.text.toString().trim()
-            taskToEdit.description = etDescription.text.toString().trim()
-            taskToEdit.priority = priority
-            taskToEdit.done = chkbxDone.isChecked
-
-            db.collection("users").document(currentUser.username).collection("tasks")
-                .document(taskToEdit.name).update(
-                    mapOf(
-                        "name" to taskToEdit.name,
-                        "description" to taskToEdit.description,
-                        "done" to taskToEdit.done,
-                        "priority" to taskToEdit.priority
-                    ),
-                )
-            exit = true
-        } else {
-            etTaskName.error = "Task name is required"
-            exit = false
         }
-        return exit
+        taskToEdit!!.name = etTaskName.text.toString().trim()
+        taskToEdit.description = etDescription.text.toString().trim()
+        taskToEdit.priority = priority
+        taskToEdit.done = chkbxDone.isChecked
+
+        db.collection("users").document(currentUser.username).collection("tasks")
+            .document(taskToEdit.name).update(
+                mapOf(
+                    "name" to taskToEdit.name,
+                    "description" to taskToEdit.description,
+                    "done" to taskToEdit.done,
+                    "priority" to taskToEdit.priority
+                ),
+            )
+        return true
     }
 
 }

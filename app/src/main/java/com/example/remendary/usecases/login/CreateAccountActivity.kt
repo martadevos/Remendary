@@ -2,11 +2,11 @@ package com.example.remendary.usecases.login
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.remendary.R
 import com.example.remendary.usecases.home.MainActivity
@@ -18,8 +18,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class CreateAccountActivity : AppCompatActivity() {
 
@@ -62,7 +64,7 @@ class CreateAccountActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val user: FirebaseUser? = firebaseUser
+        val user: FirebaseUser? = Firebase.auth.currentUser
         user?.let {
             startActivity(Intent(this, MainActivity::class.java))
             toast("welcome back")

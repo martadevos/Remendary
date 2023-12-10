@@ -30,20 +30,9 @@
                 android:textSize="30dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/formatTV"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <TextView
-                android:id="@+id/formatTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="am"
-                android:layout_marginStart="5dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/timeTV"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/timeTV"
-                app:layout_constraintTop_toTopOf="@id/timeTV" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -65,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:text="Evento"
-                android:textSize="25dp"
+                android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

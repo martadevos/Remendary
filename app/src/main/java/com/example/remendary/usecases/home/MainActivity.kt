@@ -1,8 +1,10 @@
 package com.example.remendary.usecases.home
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.remendary.EventsFragment
@@ -11,9 +13,14 @@ import com.example.remendary.databinding.ActivityMainBinding
 
 import com.example.remendary.usecases.home.routine.HomeFragment
 import com.example.remendary.usecases.home.task.TasksFragment
+import com.example.remendary.usecases.login.CreateAccountActivity
+import com.example.remendary.util.Extensions.toast
+import com.example.remendary.util.FirebaseUtils
 
 class MainActivity : AppCompatActivity() {
-    private  lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var btnLogOut: Button
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,17 +30,25 @@ class MainActivity : AppCompatActivity() {
         binding.navView.selectedItemId = R.id.homeMenuItem
 
         binding.navView.setOnItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.tasksMenuItem -> replacefragment(TasksFragment())
                 R.id.homeMenuItem -> replacefragment(HomeFragment())
                 R.id.eventsMenuItem -> replacefragment(EventsFragment())
-                else ->{}
+                else -> {}
             }
             true
         }
+
+        btnLogOut = findViewById(R.id.btnLogOut)
+        btnLogOut.setOnClickListener {
+            FirebaseUtils.firebaseAuth.signOut()
+            startActivity(Intent(this, CreateAccountActivity::class.java))
+            toast("signed out")
+            finish()
+        }
     }
 
-    private fun replacefragment(fragment: Fragment){
+    private fun replacefragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val framentTransaction = fragmentManager.beginTransaction()
         framentTransaction.replace(R.id.frameLyt, fragment)

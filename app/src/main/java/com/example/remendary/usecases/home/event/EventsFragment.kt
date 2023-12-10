@@ -1,6 +1,10 @@
 package com.example.remendary
 
-import android.content.BroadcastReceiver
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -14,13 +18,13 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.remendary.model.domain.Event
 import com.example.remendary.model.domain.User
+import com.example.remendary.usecases.home.event.AlarmNotification
 import com.example.remendary.util.Utilities
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -83,7 +87,7 @@ class EventsFragment : Fragment() {
             showNoEvents(eventsLsvw, noEventsTxtvw)
         }
         addReminderBtn.setOnClickListener {
-            showAddEventDialog(eventsLsvw, ArrayList(eventsOnDateSelected), noEventsTxtvw)
+            showAddEventDialog(eventsLsvw, noEventsTxtvw)
         }
         MaterialAlertDialogBuilder(requireContext())
             .setView(view).show()
@@ -99,7 +103,6 @@ class EventsFragment : Fragment() {
 
     fun showAddEventDialog(
         eventsLsvw: ListView,
-        eventsOnDateSelected: ArrayList<Event>,
         noEventsTxtvw: TextView
     ) {
         runBlocking {
@@ -113,12 +116,20 @@ class EventsFragment : Fragment() {
             .setView(view).show()
         addBtn.setOnClickListener {
             if (!eventName.text.toString().isNullOrEmpty()) {
+                var hour=eventHour.hour.toString()
+                if(hour.length==1){
+                    hour="0".plus(hour)
+                }
+                var minute=eventHour.minute.toString()
+                if(minute.length==1){
+                    minute="0".plus(minute)
+                }
+                calendar=calendar.plus(hour.plus(minute))
+                Log.d(TAG,"calendarioso: "+calendar)
                 //Guardar nuevo evento
                 val eventDB = hashMapOf(
                     "name" to eventName.text.toString(),
-                    "dateTime" to calendar.plus(
-                        eventHour.hour.toString().plus(eventHour.minute.toString())
-                    )//HAY QUE VER EL TIPO QUE NOS VIENE DE FIREBASE ASÍ QUE NO PUEDO CONTINUAR :(
+                    "dateTime" to calendar //HAY QUE VER EL TIPO QUE NOS VIENE DE FIREBASE ASÍ QUE NO PUEDO CONTINUAR :(
                 )
                 db.collection("users").document(currentUser.username).collection("events")
                     .document(eventName.text.toString()).set(eventDB)
@@ -138,11 +149,8 @@ class EventsFragment : Fragment() {
                         )
                         noEventsTxtvw.visibility = View.INVISIBLE
                         eventsLsvw.visibility = View.VISIBLE
-                        setAlarm(
-                            calendar.plus(
-                                eventHour.hour.toString().plus(eventHour.minute.toString())
-                            )
-                        )
+
+                        scheduleNotification(eventName.text.toString())
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(
@@ -163,18 +171,58 @@ class EventsFragment : Fragment() {
             }
         }
     }
+    private fun scheduleNotification(title:String){
+        val event= Calendar.getInstance()
+        event.set(Integer.parseInt(calendar.substring(4,8)),
+            (Integer.parseInt(calendar.substring(2,4))),//los meses van del 0 al 11 por eso se le resta 1
+            Integer.parseInt(calendar.substring(0,2)),
+            Integer.parseInt(calendar.substring(8,10)),
+            Integer.parseInt(calendar.substring(10,12)))
+        val intent=Intent(activity?.applicationContext, AlarmNotification::class.java)
+        intent.type=title
+        val pendingIntent = PendingIntent.getBroadcast(
+            activity?.applicationContext,
+            1,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val alarmManager= activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        Log.d(TAG,"HORA ACTUAL: "+Calendar.getInstance().timeInMillis.toString())
+        Log.d(TAG,"ALARMA: "+event.timeInMillis.toString())
+        calendar=calendar.substring(0,8)
+        alarmManager.set(AlarmManager.RTC_WAKEUP,event.timeInMillis,pendingIntent)
+    }
+
+    fun createChannel(){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            val channel = NotificationChannel(
+                "myChannel",
+                "MySupperChannel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply{
+                description="Default_description"
+            }
+            val notificationManager:NotificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val calendarView = requireView().findViewById<CalendarView>(R.id.calendarVw)
+        createChannel()
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            var dayWellFormated = ""
-            if (dayOfMonth < 10) {
-                dayWellFormated = "0".plus(dayOfMonth.toString())
+            var dayWellFormated = if (dayOfMonth < 10) {
+                "0".plus(dayOfMonth.toString())
             } else {
-                dayWellFormated = dayOfMonth.toString()
+                dayOfMonth.toString()
             }
-            calendar = dayWellFormated.plus(month).plus(year)
+            var monthWellFormated = if (month < 10) {
+                "0".plus(month.toString())
+            } else {
+                month.toString()
+            }
+            calendar = dayWellFormated.plus(monthWellFormated).plus(year)
             showEventDialog()
         }
     }
@@ -204,38 +252,6 @@ class EventsFragment : Fragment() {
             }
     }
 
-    private fun setAlarm(date: String) {
-        val cal = Calendar.getInstance()
-        var dateFormated = Date()
-        val sdf = SimpleDateFormat("ddMMyyyyHHmm", Locale.ENGLISH)
-        dateFormated = sdf.parse(date)
-        cal.time = dateFormated
-
-        /*
-        var alarmMgr: AlarmManager? = null
-
-        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        Intent(requireContext(), Alarm)
-        var alarmIntent: PendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, 0, intent, 0)
-        }
-
-        alarmMgr?.set(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            cal.timeInMillis,
-            alarmIntent*/
-
-    }
-
-    class OnAlarmReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            Log.i("ALARM", "Alarm activated! " + System.currentTimeMillis())
-
-            //Aquí llama tu notificación.
-        }
-    }
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     private class EventsAdapter(
         private val context: Context,
@@ -243,7 +259,7 @@ class EventsFragment : Fragment() {
         private var currentUser: User,
         private val db: FirebaseFirestore,
         private val calendar: String,
-        private val noEventsTxtvw: TextView
+        private val noEventsTxtvw: TextView,
     ) : BaseAdapter() {
 
         override fun getCount(): Int {
@@ -264,7 +280,9 @@ class EventsFragment : Fragment() {
             convertView = LayoutInflater.from(context).inflate(R.layout.events_row, parent, false)
             val eventTitle = convertView.findViewById<TextView>(R.id.eventTitle)
             eventTitle.text = arrayList[position].name
-            val deleteBtn = convertView.findViewById<ImageButton>(R.id.deleteEventBtn)
+            val timeTv = convertView.findViewById<TextView>(R.id.timeTV)
+            timeTv.text = arrayList[position].dateTime.substring(8,10).plus(":").plus(arrayList[position].dateTime.substring(10,12))
+            /*val deleteBtn = convertView.findViewById<ImageButton>(R.id.deleteEventBtn)
             deleteBtn.setOnClickListener {
                 db.collection("users").document(currentUser.username).collection("events")
                     .document(eventTitle.text.toString()).delete()
@@ -275,26 +293,38 @@ class EventsFragment : Fragment() {
                         }
                         arrayList = currentUser.events?.filter { event ->
                             event.dateTime.substring(0, 2) == calendar.substring(0, 2)
-                                    && event.dateTime.substring(2, 4) == calendar.substring(
-                                2,
-                                4
-                            ) && event.dateTime.substring(4, 8) == calendar.substring(4, 8)
-                        }?.let { ArrayList(it) }!!
+                                    && event.dateTime.substring(2, 4) == calendar.substring(2, 4)
+                                    && event.dateTime.substring(4, 8) == calendar.substring(4, 8)
+                        }?.let { it1 -> ArrayList(it1) }!!
                         notifyDataSetChanged()
                         if (arrayList.isEmpty()) {
                             noEventsTxtvw.visibility = View.VISIBLE
                             convertView.visibility = View.INVISIBLE
                         }
+                        cancelAlarm()
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(context, "Oops Something went wrong :(", Toast.LENGTH_SHORT)
                             .show()
-
                     }
-            }
+            }*/
 
             return convertView
         }
+
+        /*private fun cancelAlarm(){
+            val intent = Intent(context.applicationContext, AlarmNotification::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context.applicationContext,
+                1,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            val alarmManager = context.applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
+            alarmManager!!.cancel(pendingIntent)
+
+        }*/
+
 
     }
 }
