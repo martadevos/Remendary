@@ -9,6 +9,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.remendary.R
 
 
 class AlarmNotification: BroadcastReceiver(){
@@ -19,7 +20,7 @@ class AlarmNotification: BroadcastReceiver(){
     private fun createNotification(context: Context?, intent: Intent?){
         val pendingIntent = PendingIntent.getActivity(context,0,intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         var notification = NotificationCompat.Builder(context!!,"myChannel").
-        setSmallIcon(android.R.drawable.ic_delete).setContentTitle(intent?.type)
+        setSmallIcon(R.mipmap.ic_launcher).setContentTitle(intent?.type)
             .setContentText("")
             .setContentIntent(pendingIntent).setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
 
