@@ -8,18 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-
-    <color name="carolina_blue">#7EB5DD</color>
-    <color name="onyx">#32373B</color>
-    <color name="desert_sand">#F7D4BC</color>
-    <color name="misty_rose">#FAE3E3</color>
-    <color name="tropical_indigo">#8B85C1</color>
-    <color name="cambridge_blue">#7DAF9C</color>
-    <color name="raisin_black">#1E212B</color>
-    <color name="african_violet">#947EB0</color>
-    <color name="thistle">#CAC0D8</color>
-    <color name="rich_black">#0D1821</color>
-    <color name="isabelline">#F4EBE8</color>
-    <!--<color name="cambridge_blue">#7DAF9C</color>
-    <color name="raisin_black">#1E212B</color>-->
+    <color name="champagne_pink">#EDDCD2</color>
+    <color name="linen">#FFF1E6</color>
+    <color name="misty_rose">#FDE2E4</color>
+    <color name="mimi_pink">#FAD2E1</color>
+    <color name="light_cyan">#C5DEDD</color>
+    <color name="mint_cream">#DBE7E4</color>
+    <color name="periwinkle">#C7C9EB</color>
+    <color name="alice_blue">#D6E2E9</color>
+    <color name="columbia_blue">#BCD4E6</color>
+    <color name="powder_blue">#99C1DE</color>
 </resources>

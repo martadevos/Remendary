@@ -30,7 +30,7 @@ class TaskAdapter(private val arrayList: ArrayList<Task>, private val currentUse
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         fragment = parent.rootView
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
-        return TaskViewHolder(layoutInflater.inflate(R.layout.task_list_item, parent, false))
+        return TaskViewHolder(layoutInflater.inflate(R.layout.task_list_item, parent, false), parent)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {

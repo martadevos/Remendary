@@ -6,12 +6,14 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.remendary.R
 import com.example.remendary.model.domain.Task
@@ -19,7 +21,7 @@ import com.example.remendary.model.domain.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class TaskViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class TaskViewHolder(private val view: View, private val parent: ViewGroup) : RecyclerView.ViewHolder(view) {
 
     private val db = Firebase.firestore
     fun render(task: Task, currentUserUsername: String) {
@@ -45,21 +47,15 @@ class TaskViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         }
         when (task.priority) {
             Task.PriorityValues.HIGH -> {
-                nameTxt.setTextColor(Color.WHITE)
-                descriptionTxt.setTextColor(Color.WHITE)
-                taskItemView.setCardBackgroundColor(Color.RED)
+                taskItemView.setCardBackgroundColor(ContextCompat.getColor(parent.context, R.color.mimi_pink))
             }
 
             Task.PriorityValues.MEDIUM -> {
-                nameTxt.setTextColor(Color.WHITE)
-                descriptionTxt.setTextColor(Color.WHITE)
-                taskItemView.setCardBackgroundColor(Color.YELLOW)
+                taskItemView.setCardBackgroundColor(ContextCompat.getColor(parent.context, R.color.columbia_blue))
             }
 
             Task.PriorityValues.LOW -> {
-                nameTxt.setTextColor(Color.WHITE)
-                descriptionTxt.setTextColor(Color.WHITE)
-                taskItemView.setCardBackgroundColor(Color.GREEN)
+                taskItemView.setCardBackgroundColor(ContextCompat.getColor(parent.context, R.color.light_cyan))
             }
         }
     }

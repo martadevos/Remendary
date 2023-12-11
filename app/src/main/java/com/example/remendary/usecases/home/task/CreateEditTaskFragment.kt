@@ -17,6 +17,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -81,7 +83,7 @@ class CreateEditTaskFragment(val tipo: Int, val taskToEdit: Task?) : DialogFragm
         spinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.priority_values,
-            android.R.layout.simple_spinner_item
+            R.layout.priority_spinner
         )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerPriority.adapter = spinnerAdapter

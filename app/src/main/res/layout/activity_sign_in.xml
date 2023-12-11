@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".usecases.login.SignInActivity"
-    tools:ignore="Autofill, LabelFor">
+    tools:ignore="Autofill, LabelFor"
+    android:background="@color/linen">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sign_in"
+        android:text="Iniciar sesión"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -72,7 +73,8 @@
         app:layout_constraintBottom_toTopOf="@+id/btnCreateAccount2"
         app:layout_constraintEnd_toEndOf="@+id/etSignInPassword"
         app:layout_constraintStart_toStartOf="@+id/etSignInPassword"
-        app:layout_constraintTop_toBottomOf="@+id/etSignInPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/etSignInPassword"
+        android:background="@color/champagne_pink"/>
 
     <Button
         android:id="@+id/btnCreateAccount2"
@@ -83,6 +85,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnSignIn"
         app:layout_constraintStart_toStartOf="@+id/btnSignIn"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSignIn"
+        android:background="@color/columbia_blue"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

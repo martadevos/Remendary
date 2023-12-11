@@ -7,14 +7,16 @@
     app:cardCornerRadius="10dp"
     app:chainUseRtl="true"
     tools:context=".usecases.home.task.CreateEditTaskFragment"
-    tools:ignore="Autofill">
+    tools:ignore="Autofill"
+    android:background="@color/linen">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/createEditTaskCLyt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="50dp"
-        android:background="#00000000">
+        android:backgroundTint="@color/linen"
+        android:background="@color/linen">
 
         <TextView
             android:layout_width="wrap_content"

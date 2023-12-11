@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     app:chainUseRtl="true"
     tools:context=".usecases.login.CreateAccountActivity"
-    tools:ignore="Autofill">
+    tools:ignore="Autofill"
+    android:background="@color/linen">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="create_account"
+        android:text="Crea una cuenta"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -88,7 +89,8 @@
         app:layout_constraintBottom_toTopOf="@id/btnSignIn2"
         app:layout_constraintEnd_toEndOf="@id/etConfirmPassword"
         app:layout_constraintStart_toStartOf="@id/etConfirmPassword"
-        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword"
+        android:background="@color/champagne_pink"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -113,6 +115,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/btnCreateAccount"
         app:layout_constraintStart_toStartOf="@id/btnCreateAccount"
-        app:layout_constraintTop_toBottomOf="@id/btnCreateAccount" />
+        app:layout_constraintTop_toBottomOf="@id/btnCreateAccount"
+        android:background="@color/columbia_blue"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

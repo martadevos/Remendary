@@ -24,9 +24,6 @@
             android:name=".usecases.home.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".usecases.home.HomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".usecases.login.SignInActivity"
             android:exported="false" />
         <activity

@@ -6,32 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".usecases.home.routine.HomeFragment"
-    android:background="@color/isabelline">
-
-    <LinearLayout
-        android:id="@+id/progressLyt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="20dp"
-        android:gravity="center">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/progressCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="0"
-            android:paddingHorizontal="10dp"
-            android:text="Record: 0" />
-    </LinearLayout>
+    android:background="@color/linen">
 
     <TextView
         android:id="@+id/emptyRoutinetv"
@@ -157,8 +132,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:src="@drawable/baseline_add_48"
-            android:backgroundTint="#93A9C8"
-            app:backgroundTint="#93A9C8"
+            android:backgroundTint="@color/light_cyan"
+            app:backgroundTint="@color/light_cyan"
             android:contentDescription="Add new item to your routine"
             android:layout_margin="16dp" />
     </LinearLayout>

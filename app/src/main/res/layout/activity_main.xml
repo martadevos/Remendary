@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".usecases.home.MainActivity">
+    tools:context=".usecases.home.MainActivity"
+    android:background="@color/linen" >
     <Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/champagne_pink"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -23,7 +24,9 @@
             android:layout_height="wrap_content"
             android:text="Cerrar Sesión"
             android:layout_marginEnd="10dp"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/linen"/>
     </Toolbar>
 
     <FrameLayout
@@ -44,5 +47,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav"/>
+        app:menu="@menu/bottom_nav"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
+        android:background="@color/champagne_pink"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -282,7 +282,7 @@ class EventsFragment : Fragment() {
             eventTitle.text = arrayList[position].name
             val timeTv = convertView.findViewById<TextView>(R.id.timeTV)
             timeTv.text = arrayList[position].dateTime.substring(8,10).plus(":").plus(arrayList[position].dateTime.substring(10,12))
-            /*val deleteBtn = convertView.findViewById<ImageButton>(R.id.deleteEventBtn)
+            val deleteBtn = convertView.findViewById<ImageButton>(R.id.deleteEventBtn)
             deleteBtn.setOnClickListener {
                 db.collection("users").document(currentUser.username).collection("events")
                     .document(eventTitle.text.toString()).delete()
@@ -307,12 +307,12 @@ class EventsFragment : Fragment() {
                         Toast.makeText(context, "Oops Something went wrong :(", Toast.LENGTH_SHORT)
                             .show()
                     }
-            }*/
+            }
 
             return convertView
         }
 
-        /*private fun cancelAlarm(){
+        private fun cancelAlarm(){
             val intent = Intent(context.applicationContext, AlarmNotification::class.java)
             val pendingIntent = PendingIntent.getBroadcast(
                 context.applicationContext,
@@ -323,7 +323,7 @@ class EventsFragment : Fragment() {
             val alarmManager = context.applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
             alarmManager!!.cancel(pendingIntent)
 
-        }*/
+        }
 
 
     }
